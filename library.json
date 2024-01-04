@@ -1,0 +1,22 @@
+{
+    "name": "eMAKER BME280 driver",
+    "version": "0.1.0",
+    "description": "An arduino i2c driver for the Bosch BME280 humidity sensor",
+    "keywords": "BME280, bme280, bme",
+    "repository":
+    {
+        "type": "git",
+        "url": "https://github.com/chopster44/BME280.git"
+    },
+    "authors":
+    [
+        {
+            "name": "Oscar 'chopster44' Giacalone",
+            "email": "oscar@chopster44.com",
+            "url": "https://chopster44.com",
+            "maintainer": true
+        }
+    ],
+    "license": "GNU GPLv3",
+    "headers": "BME280.h"
+}
