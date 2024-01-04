@@ -46,3 +46,22 @@ bool BME280::write(uint8_t reg, uint8_t *buffer, uint8_t len) {
         return false;
     return true;
 }
+
+bool BME280::readRegister(uint8_t reg, uint8_t *buffer, uint8_t len) {
+    uint8_t rx_bytes = 0;
+
+    _wire->beginTransmission(_addr);
+    _wire->write(reg);
+    uint8_t err = _wire->endTransmission();
+    if (err!=0) {
+        return false;
+    }
+    rx_bytes = _wire->requestFrom(_addr, len);
+    if (rx_bytes != len){
+        return false;
+    }
+    for (uint8_t i =0; i < len; i++) {
+        buffer[i] = _wire->read();
+    }
+    return true;
+}
