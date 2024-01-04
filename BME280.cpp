@@ -42,6 +42,7 @@ bool BME280::write(uint8_t reg, uint8_t *buffer, uint8_t len) {
     for(uint8_t i = 0; i < len; i++) {
         _wire->write(buffer[i]);
     }
-    _wire->endTransmission();
+    if(_wire->endTransmission() != 0)
+        return false;
     return true;
 }
