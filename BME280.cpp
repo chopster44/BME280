@@ -25,30 +25,37 @@ bool BME280::begin(uint8_t addr, TwoWire *theWire) {
     if (whoAmI != BME280_WHO_AM_I) {
         return false;
     }
-    return init();
+
+    return calibrationSetup();
 }
 
-bool BME280::init() {
-    uint8_t resetValue = 0xB6;
-    // soft reset the chip
-    write(BME280_REG_RESET, &resetValue, 1);
+bool BME280::calibrationSetup() {
+    // reset the sensor
+    // make sure everythig is base settings
+    uint8_t writeBuffer = 0xB6;
+    write(BME280_REG_RESET, &writeBuffer, 1);
 
-    // wait for the chip
+    // wait for the reset to finish
     delay(10);
 
-    // check if chip is ready to recieve configs
-    while (isReadingCalibration())
+    // verify the chip is ready
+    while (!isReady())
         delay(10);
     
-    readTrim();
+    // read the Factory trim values
+    
+}
 
-    setConfig();
+bool BME280::isReady() {
+    uint8_t status[1];
+    readRegister(BME280_REG_STATUS, status);
 
+    return (status[0] & 1) == 0;
 }
 
 uint8_t BME280::whoami() {
     uint8_t buffer[1];
-    if (readRegister(BME280_WHO_AM_I_REG, buffer))
+    if (readRegister(BME280_REG_WHOAMI, buffer))
         return buffer[0];
     return -1;
 }

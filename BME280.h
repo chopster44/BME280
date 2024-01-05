@@ -65,26 +65,26 @@ enum BME280_Reg_Map {
 // types
 
 typedef struct {
-  uint16_t dig_T1; ///< temperature compensation value
-  int16_t dig_T2;  ///< temperature compensation value
-  int16_t dig_T3;  ///< temperature compensation value
+  uint16_t dig_T1; // temperature trim value
+  int16_t dig_T2;  // temperature trim value
+  int16_t dig_T3;  // temperature trim value
 
-  uint16_t dig_P1; ///< pressure compensation value
-  int16_t dig_P2;  ///< pressure compensation value
-  int16_t dig_P3;  ///< pressure compensation value
-  int16_t dig_P4;  ///< pressure compensation value
-  int16_t dig_P5;  ///< pressure compensation value
-  int16_t dig_P6;  ///< pressure compensation value
-  int16_t dig_P7;  ///< pressure compensation value
-  int16_t dig_P8;  ///< pressure compensation value
-  int16_t dig_P9;  ///< pressure compensation value
+  uint16_t dig_P1; // pressure trim value
+  int16_t dig_P2;  // pressure trim value
+  int16_t dig_P3;  // pressure trim value
+  int16_t dig_P4;  // pressure trim value
+  int16_t dig_P5;  // pressure trim value
+  int16_t dig_P6;  // pressure trim value
+  int16_t dig_P7;  // pressure trim value
+  int16_t dig_P8;  // pressure trim value
+  int16_t dig_P9;  // pressure trim value
 
-  uint8_t dig_H1; ///< humidity compensation value
-  int16_t dig_H2; ///< humidity compensation value
-  uint8_t dig_H3; ///< humidity compensation value
-  int16_t dig_H4; ///< humidity compensation value
-  int16_t dig_H5; ///< humidity compensation value
-  int8_t dig_H6;  ///< humidity compensation value
+  uint8_t dig_H1; // humidity trim value
+  int16_t dig_H2; // humidity trim value
+  uint8_t dig_H3; // humidity trim value
+  int16_t dig_H4; // humidity trim value
+  int16_t dig_H5; // humidity trim value
+  int8_t dig_H6;  // humidity trim value
 } bme280_trim_data;
 
 
@@ -95,6 +95,11 @@ class BME280 {
     private:
         TwoWire *_wire;
         uint8_t _addr;
+        bme280_trim_data bme_calibration;
+
+        bool calibrationSetup();
+        bool isReady();
+
         bool write(uint8_t reg, uint8_t *buffer, uint8_t len);
         bool readRegister(uint8_t reg, uint8_t *buffer, uint8_t len = 1);
 };
