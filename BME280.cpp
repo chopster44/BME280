@@ -22,11 +22,28 @@ bool BME280::begin(uint8_t addr, TwoWire *theWire) {
     _wire = theWire;
     _addr = addr;
     uint8_t whoAmI = whoami();
-    if (whoAmI == BME280_WHO_AM_I) {
-        return true;
-    } else {
+    if (whoAmI != BME280_WHO_AM_I) {
         return false;
     }
+    return init();
+}
+
+bool BME280::init() {
+    uint8_t resetValue = 0xB6;
+    // soft reset the chip
+    write(BME280_REG_RESET, &resetValue, 1);
+
+    // wait for the chip
+    delay(10);
+
+    // check if chip is ready to recieve configs
+    while (isReadingCalibration())
+        delay(10);
+    
+    readTrim();
+
+    setConfig();
+
 }
 
 uint8_t BME280::whoami() {
