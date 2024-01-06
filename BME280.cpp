@@ -54,9 +54,33 @@ bool BME280::calibrationSetup() {
 
 bme280TrimData BME280::readTrim() {
     bme280TrimData trim;
-    // read Temperature values;
-    trim.dig_T1 = // read16()
-    trim.dig_T2 = // readSigned16()
+    // read Temperature trim;
+    trim.dig_T1 = read16(BME280_REG_DIG_T1);
+    trim.dig_T2 = readSigned16(BME280_REG_DIG_T2);
+    trim.dig_T3 = readSigned16(BME280_REG_DIG_T3);
+
+    // read Pressure trim;
+    trim.dig_P1 = read16(BME280_REG_DIG_P1);
+    trim.dig_P2 = readSigned16(BME280_REG_DIG_P2);
+    trim.dig_P3 = readSigned16(BME280_REG_DIG_P3);
+    trim.dig_P4 = readSigned16(BME280_REG_DIG_P4);
+    trim.dig_P5 = readSigned16(BME280_REG_DIG_P5);
+    trim.dig_P6 = readSigned16(BME280_REG_DIG_P6);
+    trim.dig_P7 = readSigned16(BME280_REG_DIG_P7);
+    trim.dig_P8 = readSigned16(BME280_REG_DIG_P8);
+    trim.dig_P9 = readSigned16(BME280_REG_DIG_P9);
+
+    // read Humidity trim;
+    trim.dig_H1 = read8(BME280_REG_DIG_H1);
+    trim.dig_H2 = readSigned16(BME280_REG_DIG_H2);
+    trim.dig_H3 = read8(BME280_REG_DIG_H3);
+    trim.dig_H4 = ((int8_t)read8(BME280_REG_DIG_H4) << 4) |
+                    ((int8_t)read8(BME280_REG_DIG_H4+1) & 0xF);
+    trim.dig_H5 = (((int8_t)read8(BME280_REG_DIG_H5) & 0xF0) << 8) |
+                    ((int8_t)read8(BME280_REG_DIG_H5+1));
+    trim.dig_H6 = read8(BME280_REG_DIG_H6);
+
+    return trim;
 }
 
 bool BME280::isReady() {
