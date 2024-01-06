@@ -44,12 +44,19 @@ bool BME280::calibrationSetup() {
         delay(10);
     
     // read the Factory trim values
-    readTrim();
+    bmeTrim = readTrim();
     // set the Sampling values
     setSampling();
     // wait for boot
     delay(100);
     return true;
+}
+
+bme280TrimData BME280::readTrim() {
+    bme280TrimData trim;
+    // read Temperature values;
+    trim.dig_T1 = // read16()
+    trim.dig_T2 = // readSigned16()
 }
 
 bool BME280::isReady() {
@@ -94,4 +101,24 @@ bool BME280::readRegister(uint8_t reg, uint8_t *buffer, uint8_t len) {
         buffer[i] = _wire->read();
     }
     return true;
+}
+
+uint8_t BME280::read8(uint8_t reg) {
+    uint8_t buffer[1];
+    readRegister(reg, buffer);
+    return buffer[0];
+}
+
+uint16_t BME280::read16(uint8_t reg) {
+    uint8_t buffer[1];
+    uint16_t res;
+    readRegister(reg, buffer);
+    res = buffer[0] << 8;
+    readRegister(reg +1, buffer);
+    res |= buffer[0];
+    return res;
+}
+
+int16_t BME280::readSigned16(uint8_t reg) {
+    return (int16_t)read16(reg);
 }

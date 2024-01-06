@@ -92,7 +92,7 @@ class BME280 {
     public:
         bool begin(uint8_t addr = BME280_DEFAULT_ADDRESS, TwoWire *theWire = &Wire);
         uint8_t whoami();
-        void readTrim();
+        bme280TrimData readTrim();
         void setSampling();
     private:
         TwoWire *_wire;
@@ -104,6 +104,10 @@ class BME280 {
 
         bool write(uint8_t reg, uint8_t *buffer, uint8_t len);
         bool readRegister(uint8_t reg, uint8_t *buffer, uint8_t len = 1);
+
+        uint8_t read8(uint8_t reg);
+        uint16_t read16(uint8_t reg);
+        int16_t readSigned16(uint8_t reg);
 };
 
 #endif
