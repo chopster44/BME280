@@ -33,7 +33,8 @@ bool BME280::calibrationSetup() {
     // reset the sensor
     // make sure everythig is base settings
     uint8_t writeBuffer = 0xB6;
-    write(BME280_REG_RESET, &writeBuffer, 1);
+    if (!write(BME280_REG_RESET, &writeBuffer, 1))
+        return false;
 
     // wait for the reset to finish
     delay(10);
@@ -43,7 +44,12 @@ bool BME280::calibrationSetup() {
         delay(10);
     
     // read the Factory trim values
-    
+    readTrim();
+    // set the Sampling values
+    setSampling();
+    // wait for boot
+    delay(100);
+    return true;
 }
 
 bool BME280::isReady() {

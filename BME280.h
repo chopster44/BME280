@@ -27,7 +27,7 @@
 #define BME280_ALTERNATE_ADDRESS    (0x76)
 #define BME280_WHO_AM_I             (0x60)
 
-enum BME280_Reg_Map {
+enum BME280RegMap {
     BME280_REG_DIG_T1 = 0x88,
     BME280_REG_DIG_T2 = 0x8A,
     BME280_REG_DIG_T3 = 0x8C,
@@ -85,17 +85,19 @@ typedef struct {
   int16_t dig_H4; // humidity trim value
   int16_t dig_H5; // humidity trim value
   int8_t dig_H6;  // humidity trim value
-} bme280_trim_data;
+} bme280TrimData;
 
 
 class BME280 {
     public:
         bool begin(uint8_t addr = BME280_DEFAULT_ADDRESS, TwoWire *theWire = &Wire);
         uint8_t whoami();
+        void readTrim();
+        void setSampling();
     private:
         TwoWire *_wire;
         uint8_t _addr;
-        bme280_trim_data bme_calibration;
+        bme280TrimData bmeTrim;
 
         bool calibrationSetup();
         bool isReady();
