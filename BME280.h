@@ -90,10 +90,51 @@ typedef struct {
 
 class BME280 {
     public:
+
+        enum sensorMode {
+            BME280_SLEEP = 0b00,
+            BME280_FORCE = 0b01,
+            BME280_NORM  = 0b11
+        };
+
+        enum sensorSampling {
+            BME280_SAMPLE_SKIP  = 0b000,
+            BME280_SAMPLE_1X    = 0b001,
+            BME280_SAMPLE_2X    = 0b010,
+            BME280_SAMPLE_4X    = 0b011,
+            BME280_SAMPLE_8X    = 0b100,
+            BME280_SAMPLE_16X   = 0b101
+        };
+
+        enum sensorFilter {
+            BME280_FILTER_OFF       = 0b000,
+            BME280_FILTER_1         = 0b001,
+            BME280_FILTER_2         = 0b010,
+            BME280_FILTER_4         = 0b011,
+            BME280_FILTER_8         = 0b100,
+            BME280_FILTER_16        = 0b101
+        };
+
+        enum standbyDuration {
+            BME280_STANDBY_0p5  = 0b000,
+            BME280_STANDBY_62p5 = 0b001,
+            BME280_STANDBY_125  = 0b010,
+            BME280_STANDBY_250  = 0b011,
+            BME280_STANDBY_500  = 0b100,
+            BME280_STANDBY_1000 = 0b101,
+            BME280_STANDBY_10   = 0b110,
+            BME280_STANDBY_20   = 0b111,
+        };
+
         bool begin(uint8_t addr = BME280_DEFAULT_ADDRESS, TwoWire *theWire = &Wire);
         uint8_t whoami();
         bme280TrimData readTrim();
-        void setSampling();
+        void setSampling(sensorMode mode = BME280_NORM,
+                         sensorSampling tempSampling = BME280_SAMPLE_16X,
+                         sensorSampling pressSampling = BME280_SAMPLE_16X,
+                         sensorSampling humSampling = BME280_SAMPLE_16X,
+                         sensorFilter filter = BME280_FILTER_OFF,
+                         standbyDuration duration = BME280_STANDBY_0p5);
     private:
         TwoWire *_wire;
         uint8_t _addr;

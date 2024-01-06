@@ -52,6 +52,27 @@ bool BME280::calibrationSetup() {
     return true;
 }
 
+void BME280::setSampling(sensorMode mode, sensorSampling tempSampling,
+                         sensorSampling pressSampling, sensorSampling humSampling,
+                         sensorFilter filter, standbyDuration duration) {
+    // put sensor to sleep so that the settings are written properly
+    uint8_t buffer = BME280_SLEEP;
+    write(BME280_CTRL_MEAS, &buffer, 1);
+
+    // write the given values
+    // to humidity settings
+    buffer = humSampling;
+    write(BME280_CTRL_HUM, &buffer, 1);
+    // to main conf
+    // bits 7 6 5 are standby setting, bits 4 3 2 are filter and 0 sets spi on
+    buffer = ((uint8_t)duration << 5) | ((uint8_t)filter << 3) | 0b00;
+    write(BME280_REG_CONFIG, &buffer, 1);
+    // to sensor conf
+    // 7 6 5 are temp, 4 3 2 are pressure and 1 0 are mode
+    buffer = ((uint8_t)tempSampling << 5) | ((uint8_t)pressSampling << 3) | (uint8_t)mode;
+    write(BME280_CTRL_MEAS, &buffer, 1);
+}
+
 bme280TrimData BME280::readTrim() {
     bme280TrimData trim;
     // read Temperature trim;
