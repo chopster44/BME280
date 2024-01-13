@@ -139,6 +139,9 @@ class BME280 {
         TwoWire *_wire;
         uint8_t _addr;
         bme280TrimData bmeTrim;
+        sensorSampling tempSampling;
+        sensorSampling presSampling;
+        sensorSampling humSampling;
 
         bool calibrationSetup();
         bool isReady();

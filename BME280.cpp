@@ -71,6 +71,12 @@ void BME280::setSampling(sensorMode mode, sensorSampling tempSampling,
     // 7 6 5 are temp, 4 3 2 are pressure and 1 0 are mode
     buffer = ((uint8_t)tempSampling << 5) | ((uint8_t)pressSampling << 3) | (uint8_t)mode;
     write(BME280_CTRL_MEAS, &buffer, 1);
+    // store the sampling settings for later use if the filter is off
+    if (BME280_FILTER_OFF == filter) {
+        BME280::tempSampling = tempSampling;
+        presSampling = pressSampling;
+        BME280::humSampling = humSampling;
+    }
 }
 
 bme280TrimData BME280::readTrim() {
