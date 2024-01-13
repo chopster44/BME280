@@ -139,7 +139,7 @@ class BME280 {
         uint32_t getRawTemp();
         uint16_t getRawHum();
         float getPressure();
-        float getTempurature();
+        float getTemperature();
         float getHumidity();
     private:
         TwoWire *_wire;

@@ -180,7 +180,7 @@ uint32_t BME280::getRawTemp() {
     return rawTemperature;
 }
 
-float BME280::getTempurature() {
+float BME280::getTemperature() {
     // run the formula from bosch with the implementation borrowed from adafruit
     int32_t var1, var2;
 
