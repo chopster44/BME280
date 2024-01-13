@@ -128,6 +128,7 @@ uint32_t BME280::getRawPres() {
 
 // returns in pascals
 float BME280::getPressure() {
+    // run the formula from bosch with the implementation borrowed from adafruit
     int64_t var1, var2, var3, var4;
 
     getTempurature(); // must be done first to get t_fine
@@ -213,6 +214,36 @@ uint16_t BME280::getRawHum() {
     rawHum |= humByte[0];
     return rawHum;
 }
+
+float BME280::getHumidity() {
+    // run the formula from bosch with the implementation borrowed from adafruit
+    int32_t var1, var2, var3, var4, var5;
+
+    getTempurature(); // must be done first to get t_fine
+
+    int32_t adc_H = getRawHum();
+    if (adc_H == 0x8000) // value in case humidity measurement was disabled
+        return NAN;
+
+    var1 = t_fine - ((int32_t)76800);
+    var2 = (int32_t)(adc_H * 16384);
+    var3 = (int32_t)(((int32_t)bmeTrim.dig_H4) * 1048576);
+    var4 = ((int32_t)bmeTrim.dig_H5) * var1;
+    var5 = (((var2 - var3) - var4) + (int32_t)16384) / 32768;
+    var2 = (var1 * ((int32_t)bmeTrim.dig_H6)) / 1024;
+    var3 = (var1 * ((int32_t)bmeTrim.dig_H3)) / 2048;
+    var4 = ((var2 * (var3 + (int32_t)32768)) / 1024) + (int32_t)2097152;
+    var2 = ((var4 * ((int32_t)bmeTrim.dig_H2)) + 8192) / 16384;
+    var3 = var5 * var2;
+    var4 = ((var3 / 32768) * (var3 / 32768)) / 128;
+    var5 = var3 - ((var4 * ((int32_t)bmeTrim.dig_H1)) / 16);
+    var5 = (var5 < 0 ? 0 : var5);
+    var5 = (var5 > 419430400 ? 419430400 : var5);
+    uint32_t H = (uint32_t)(var5 / 4096);
+
+    return (float)H / 1024.0;
+}
+
 
 bool BME280::isReady() {
     uint8_t status[1];
