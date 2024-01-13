@@ -110,6 +110,51 @@ bme280TrimData BME280::readTrim() {
     return trim;
 }
 
+uint32_t BME280::getRawPres() {
+    // read 0xF7 0xF8  some of 0xF9 (bit 7,6,5,4)
+    uint32_t rawPressure = 0;
+    uint8_t presByte[1];
+    if (!readRegister(BME280_REG_PRES, presByte))
+        return -1;
+    rawPressure |= presByte[0] << (16 - (presSampling - 1));
+    if (!readRegister(BME280_REG_PRES+1, presByte))
+        return -1;
+    rawPressure |= presByte[0] << (8 - (presSampling - 1));
+    if (!readRegister(BME280_REG_PRES+2, presByte))
+        return -1;
+    rawPressure |= presByte[0];
+    return rawPressure;
+}
+
+uint32_t BME280::getRawTemp() {
+    // read 0xFA 0xFB  some of 0xFC (bit 7,6,5,4)
+    uint32_t rawTemperature = 0;
+    uint8_t tempByte[1];
+    if (!readRegister(BME280_REG_TEMP, tempByte))
+        return -1;
+    rawTemperature |= tempByte[0] << (16 - (presSampling - 1));
+    if (!readRegister(BME280_REG_TEMP+1, tempByte))
+        return -1;
+    rawTemperature |= tempByte[0] << (8 - (presSampling - 1));
+    if (!readRegister(BME280_REG_TEMP+2, tempByte))
+        return -1;
+    rawTemperature |= tempByte[0];
+    return rawTemperature;
+}
+
+uint16_t BME280::getRawHum() {
+    // read 0xFD 0x FE
+    uint16_t rawHum = 0;
+    uint8_t humByte[1];
+    if (!readRegister(BME280_REG_HUM, humByte))
+        return -1;
+    rawHum |= humByte[0] << 8;
+    if (!readRegister(BME280_REG_HUM+1, humByte))
+        return -1;
+    rawHum |= humByte[0];
+    return rawHum;
+}
+
 bool BME280::isReady() {
     uint8_t status[1];
     readRegister(BME280_REG_STATUS, status);

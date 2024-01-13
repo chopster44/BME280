@@ -135,6 +135,9 @@ class BME280 {
                          sensorSampling humSampling = BME280_SAMPLE_16X,
                          sensorFilter filter = BME280_FILTER_OFF,
                          standbyDuration duration = BME280_STANDBY_0p5);
+        uint32_t getRawPres();
+        uint32_t getRawTemp();
+        uint16_t getRawHum();
     private:
         TwoWire *_wire;
         uint8_t _addr;
