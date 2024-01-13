@@ -138,9 +138,9 @@ class BME280 {
         uint32_t getRawPres();
         uint32_t getRawTemp();
         uint16_t getRawHum();
-        int32_t getPressure();
-        int32_t getTempurature();
-        int32_t getHumidity();
+        float getPressure();
+        float getTempurature();
+        float getHumidity();
     private:
         TwoWire *_wire;
         uint8_t _addr;

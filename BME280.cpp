@@ -126,6 +126,43 @@ uint32_t BME280::getRawPres() {
     return rawPressure;
 }
 
+// returns in pascals
+float BME280::getPressure() {
+    int64_t var1, var2, var3, var4;
+
+    getTempurature(); // must be done first to get t_fine
+
+    int32_t adc_P = getRawPres();
+    if (adc_P == 0x800000) // value in case pressure measurement was disabled
+        return NAN;
+    adc_P >>= 4;
+
+    var1 = ((int64_t)t_fine) - 128000;
+    var2 = var1 * var1 * (int64_t)bmeTrim.dig_P6;
+    var2 = var2 + ((var1 * (int64_t)bmeTrim.dig_P5) * 131072);
+    var2 = var2 + (((int64_t)bmeTrim.dig_P4) * 34359738368);
+    var1 = ((var1 * var1 * (int64_t)bmeTrim.dig_P3) / 256) +
+           ((var1 * ((int64_t)bmeTrim.dig_P2) * 4096));
+    var3 = ((int64_t)1) * 140737488355328;
+    var1 = (var3 + var1) * ((int64_t)bmeTrim.dig_P1) / 8589934592;
+
+    if (var1 == 0) {
+        return 0; // avoid exception caused by division by zero
+    }
+
+    var4 = 1048576 - adc_P;
+    var4 = (((var4 * 2147483648) - var2) * 3125) / var1;
+    var1 = (((int64_t)bmeTrim.dig_P9) * (var4 / 8192) * (var4 / 8192)) /
+           33554432;
+    var2 = (((int64_t)bmeTrim.dig_P8) * var4) / 524288;
+    var4 = ((var4 + var1 + var2) / 256) + (((int64_t)bmeTrim.dig_P7) * 16);
+
+    float P = var4 / 256.0;
+
+    return P;
+}
+
+
 uint32_t BME280::getRawTemp() {
     // read 0xFA 0xFB  some of 0xFC (bit 7,6,5,4)
     uint32_t rawTemperature = 0;
@@ -142,7 +179,7 @@ uint32_t BME280::getRawTemp() {
     return rawTemperature;
 }
 
-int32_t BME280::getTempurature() {
+float BME280::getTempurature() {
     // run the formula from bosch with the implementation borrowed from adafruit
     int32_t var1, var2;
 
@@ -160,7 +197,7 @@ int32_t BME280::getTempurature() {
 
     int32_t T = (t_fine * 5 + 128) / 256;
 
-    return T;
+    return T / 100.0F;
 }
 
 
