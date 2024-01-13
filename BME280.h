@@ -138,6 +138,9 @@ class BME280 {
         uint32_t getRawPres();
         uint32_t getRawTemp();
         uint16_t getRawHum();
+        int32_t getPressure();
+        int32_t getTempurature();
+        int32_t getHumidity();
     private:
         TwoWire *_wire;
         uint8_t _addr;
@@ -145,6 +148,9 @@ class BME280 {
         sensorSampling tempSampling;
         sensorSampling presSampling;
         sensorSampling humSampling;
+
+        // idk why but humidity calc wants this
+        int32_t t_fine;
 
         bool calibrationSetup();
         bool isReady();

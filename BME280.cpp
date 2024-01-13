@@ -142,6 +142,28 @@ uint32_t BME280::getRawTemp() {
     return rawTemperature;
 }
 
+int32_t BME280::getTempurature() {
+    // run the formula from bosch with the implementation borrowed from adafruit
+    int32_t var1, var2;
+
+    int32_t adc_T = getRawTemp();
+    if (adc_T == 0x800000) // temp turned off?w
+        return NAN;
+    adc_T >>= 4;
+
+    var1 = (int32_t)((adc_T / 8) - ((int32_t)bmeTrim.dig_T1 * 2));
+    var1 = (var1 * ((int32_t)bmeTrim.dig_T2)) / 2048;
+    var2 = (int32_t)((adc_T / 16) - ((int32_t)bmeTrim.dig_T1));
+    var2 = (((var2 * var2) / 4096) * ((int32_t)bmeTrim.dig_T3)) / 16384;
+
+    t_fine = var1 + var2;
+
+    int32_t T = (t_fine * 5 + 128) / 256;
+
+    return T;
+}
+
+
 uint16_t BME280::getRawHum() {
     // read 0xFD 0x FE
     uint16_t rawHum = 0;
