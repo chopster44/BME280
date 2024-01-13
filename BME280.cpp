@@ -131,7 +131,7 @@ float BME280::getPressure() {
     // run the formula from bosch with the implementation borrowed from adafruit
     int64_t var1, var2, var3, var4;
 
-    getTempurature(); // must be done first to get t_fine
+    getTemperature(); // must be done first to get t_fine
 
     int32_t adc_P = getRawPres();
     if (adc_P == 0x800000) // value in case pressure measurement was disabled
@@ -219,7 +219,7 @@ float BME280::getHumidity() {
     // run the formula from bosch with the implementation borrowed from adafruit
     int32_t var1, var2, var3, var4, var5;
 
-    getTempurature(); // must be done first to get t_fine
+    getTemperature(); // must be done first to get t_fine
 
     int32_t adc_H = getRawHum();
     if (adc_H == 0x8000) // value in case humidity measurement was disabled
