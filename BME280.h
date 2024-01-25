@@ -23,8 +23,8 @@
 #include <Wire.h>
 
 //I2C Address
-#define BME280_DEFAULT_ADDRESS      (0x77)
-#define BME280_ALTERNATE_ADDRESS    (0x76)
+#define BME280_DEFAULT_ADDRESS      (0x76)
+#define BME280_ALTERNATE_ADDRESS    (0x77)
 #define BME280_WHO_AM_I             (0x60)
 
 enum BME280RegMap {
