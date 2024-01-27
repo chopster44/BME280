@@ -128,7 +128,7 @@ class BME280 {
 
         bool begin(uint8_t addr = BME280_DEFAULT_ADDRESS, TwoWire *theWire = &Wire);
         uint8_t whoami();
-        bme280TrimData readTrim();
+        void readTrim();
         void setSampling(sensorMode mode = BME280_NORM,
                          sensorSampling tempSampling = BME280_SAMPLE_16X,
                          sensorSampling pressSampling = BME280_SAMPLE_16X,
